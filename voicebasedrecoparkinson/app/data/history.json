@@ -1,0 +1,110 @@
+[
+  {
+    "timestamp": "2026-02-08 17:01",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 78,
+    "source": "recorded_voice.wav"
+  },
+  {
+    "timestamp": "2026-02-08 16:52",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 85,
+    "source": "recorded_voice.wav"
+  },
+  {
+    "timestamp": "2026-02-08 16:52",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 86,
+    "source": "recorded_voice.wav"
+  },
+  {
+    "timestamp": "2026-02-08 16:51",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 91,
+    "source": "recorded_voice.wav"
+  },
+  {
+    "timestamp": "2026-02-08 16:48",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 93,
+    "source": "recorded_voice.wav"
+  },
+  {
+    "timestamp": "2026-02-08 16:47",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 97,
+    "source": "recorded_voice.wav"
+  },
+  {
+    "timestamp": "2026-02-08 15:41",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 15:36",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  },
+  {
+    "timestamp": "2026-02-08 14:56",
+    "label": "Likely Parkinson\u2019s",
+    "confidence": 98,
+    "source": "Project 14 Parkinsons Disease Data.csv.xlsx [row 0]"
+  }
+]
