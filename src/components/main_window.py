@@ -623,9 +623,7 @@ class MainWindow(QMainWindow):
             QMessageBox.critical(
                 self,
                 "Recording Error",
-                f"Audio recording dependencies are missing.
-
-{exc}",
+                f"Audio recording dependencies are missing.\n\n{exc}",
             )
             return
 
@@ -663,9 +661,7 @@ class MainWindow(QMainWindow):
         if hasattr(self, '_current_rec_btn') and self._current_rec_btn:
             self._current_rec_btn.setEnabled(True)
             self._current_rec_btn.setText("Record Audio")
-        QMessageBox.critical(self, "Recording Error", f"Failed to record audio.
-
-{exc}")
+        QMessageBox.critical(self, "Recording Error", f"Failed to record audio.\n\n{exc}")
 
     def _run_analysis(self) -> None:
         is_audio = self.mode_combo.currentIndex() == 0
@@ -853,3 +849,5 @@ def create_app() -> QApplication:
     app = QApplication([])
     app.setFont(QFont("Segoe UI", 10))
     return app
+
+
