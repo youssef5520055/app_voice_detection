@@ -5,7 +5,8 @@ A state-of-the-art desktop application designed to screen for Parkinson's Diseas
 ### Live Deployment
 *Desktop Application — [Clone & Run Locally](https://github.com/youssef5520055/app_voice_detection)*
 
-![Platform Interface](docs/screenshot.png)
+![Overview Interface](docs/screenshot.png)
+![Record Voice Interface](docs/screenshot2.png)
 
 ### 🌟 Core Feature Suite
 
