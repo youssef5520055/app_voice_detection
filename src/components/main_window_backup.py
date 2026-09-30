@@ -84,10 +84,9 @@ class MainWindow(QMainWindow):
 
     def _build_ui(self) -> None:
         container = QWidget()
-        container.setObjectName("mainContent")
         root = QHBoxLayout(container)
-        root.setContentsMargins(0, 0, 0, 0)
-        root.setSpacing(0)
+        root.setContentsMargins(18, 18, 18, 18)
+        root.setSpacing(16)
 
         sidebar = self._build_sidebar()
         content = self._build_content()
@@ -100,49 +99,58 @@ class MainWindow(QMainWindow):
         self._switch_mode()
         self._set_page(0)
 
-    def _nav_button(self, text: str, icon_style: QStyle.StandardPixmap, id: int) -> QPushButton:
-        btn = QPushButton(text)
-        btn.setObjectName("navButton")
-        btn.setCheckable(True)
-        self.nav_group.addButton(btn, id)
-        return btn
-
     def _build_sidebar(self) -> QFrame:
         sidebar = QFrame()
         sidebar.setObjectName("sidebar")
-        sidebar.setFixedWidth(240)
+        sidebar.setFixedWidth(230)
         layout = QVBoxLayout(sidebar)
-        layout.setContentsMargins(16, 32, 16, 32)
-        layout.setSpacing(8)
+        layout.setContentsMargins(18, 20, 18, 20)
+        layout.setSpacing(16)
 
         logo = QLabel("Voice Health")
         logo.setObjectName("logo")
-        logo.setContentsMargins(12, 0, 12, 24)
         layout.addWidget(logo)
+
+        profile = QFrame()
+        profile.setObjectName("profileCard")
+        profile_layout = QVBoxLayout(profile)
+        profile_layout.setContentsMargins(12, 12, 12, 12)
+        profile_layout.setSpacing(6)
+        profile_name = QLabel("Research User")
+        profile_name.setObjectName("profileName")
+        profile_meta = QLabel("Academic Demo")
+        profile_meta.setObjectName("profileMeta")
+        profile_layout.addWidget(profile_name)
+        profile_layout.addWidget(profile_meta)
+        layout.addWidget(profile)
 
         nav = QFrame()
         nav_layout = QVBoxLayout(nav)
         nav_layout.setContentsMargins(0, 0, 0, 0)
-        nav_layout.setSpacing(4)
+        nav_layout.setSpacing(8)
         self.nav_group = QButtonGroup(self)
         self.nav_group.setExclusive(True)
 
-        self.nav_dashboard = self._nav_button("Overview", QStyle.SP_ComputerIcon, 0)
+        self.nav_dashboard = self._nav_button("Dashboard", QStyle.SP_ComputerIcon, 0)
         self.nav_record = self._nav_button("Record Voice", QStyle.SP_MediaPlay, 1)
         self.nav_quality = self._nav_button("Quality", QStyle.SP_FileDialogDetailedView, 2)
-        self.nav_results = self._nav_button("Analysis", QStyle.SP_FileDialogContentsView, 3)
+        self.nav_results = self._nav_button("Results", QStyle.SP_FileDialogContentsView, 3)
         self.nav_history = self._nav_button("History", QStyle.SP_FileDialogListView, 4)
-        
-        for btn in [self.nav_dashboard, self.nav_record, self.nav_quality, self.nav_results, self.nav_history]:
+        for btn in [
+            self.nav_dashboard,
+            self.nav_record,
+            self.nav_quality,
+            self.nav_results,
+            self.nav_history,
+        ]:
             nav_layout.addWidget(btn)
-            
         layout.addWidget(nav)
         layout.addStretch(1)
 
         score_card = QFrame()
         score_card.setObjectName("scoreCard")
         score_layout = QVBoxLayout(score_card)
-        score_layout.setContentsMargins(16, 20, 16, 20)
+        score_layout.setContentsMargins(12, 12, 12, 12)
         score_title = QLabel("Voice Health Score")
         score_title.setObjectName("scoreTitle")
         self.score_value = QLabel("--")
@@ -160,20 +168,20 @@ class MainWindow(QMainWindow):
         content = QFrame()
         content.setObjectName("content")
         content_layout = QVBoxLayout(content)
-        content_layout.setContentsMargins(40, 40, 40, 40)
-        content_layout.setSpacing(24)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(16)
 
-        header = QWidget()
-        header_layout = QVBoxLayout(header)
-        header_layout.setContentsMargins(0, 0, 0, 16)
-        header_layout.setSpacing(4)
-        self.page_title = QLabel(APP_TITLE)
-        self.page_title.setObjectName("pageTitle")
-        self.page_subtitle = QLabel("Clinical-style acoustic screening")
-        self.page_subtitle.setObjectName("subtitle")
-        header_layout.addWidget(self.page_title)
-        header_layout.addWidget(self.page_subtitle)
-        content_layout.addWidget(header)
+        header_card = QFrame()
+        header_card.setObjectName("card")
+        header_layout = QVBoxLayout(header_card)
+        header_layout.setContentsMargins(24, 20, 24, 20)
+        title = QLabel(APP_TITLE)
+        title.setObjectName("title")
+        subtitle = QLabel("Clinical-style acoustic screening using classical ML")
+        subtitle.setObjectName("subtitle")
+        header_layout.addWidget(title)
+        header_layout.addWidget(subtitle)
+        content_layout.addWidget(header_card)
 
         self.stack = QStackedWidget()
         content_layout.addWidget(self.stack, 1)
@@ -203,7 +211,7 @@ class MainWindow(QMainWindow):
         page = QWidget()
         layout = QVBoxLayout(page)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(24)
+        layout.setSpacing(16)
         return page, layout
 
     def _clear_layout(self, layout: QVBoxLayout) -> None:
@@ -220,28 +228,17 @@ class MainWindow(QMainWindow):
         layout.addStretch(1)
 
     def _set_page(self, index: int) -> None:
-        titles = ["Overview", "Record Voice", "Audio Quality", "Voice Analysis", "History"]
-        subtitles = [
-            "Your recent acoustic health summary",
-            "Record a short voice sample for acoustic analysis",
-            "Detailed acoustic signal metrics",
-            "Research-grade analysis of acoustic features",
-            "Past recordings and acoustic health scores"
-        ]
-        self.page_title.setText(titles[index])
-        self.page_subtitle.setText(subtitles[index])
-        
         if index == 0:
             self._compose_page(
                 self.dashboard_layout,
-                [self.tiles_container, self.record_link_card, self.result_card],
+                [self.tiles_container, self.record_link_card, self.result_card, self.history_card],
             )
         elif index == 1:
             self._compose_page(self.record_layout, [self.action_card])
         elif index == 2:
             self._compose_page(self.quality_layout, [self.quality_card])
         elif index == 3:
-            self._compose_page(self.results_layout, [self.result_card])
+            self._compose_page(self.results_layout, [self.result_card, self.history_card])
         else:
             self._compose_page(self.history_layout, [self.history_card])
 
@@ -257,279 +254,344 @@ class MainWindow(QMainWindow):
 
     def _build_tiles_container(self) -> QFrame:
         container = QFrame()
+        container.setObjectName("tilesRow")
         layout = QHBoxLayout(container)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(16)
+        layout.setSpacing(12)
         self.status_tile = self._create_tile("Model Status", "Checking...")
         self.mode_tile = self._create_tile("Input Mode", "WAV Audio")
-        self.conf_tile = self._create_tile("Last Score", "--")
+        self.conf_tile = self._create_tile("Last Confidence", "--")
         layout.addWidget(self.status_tile)
         layout.addWidget(self.mode_tile)
         layout.addWidget(self.conf_tile)
         return container
 
-    def _create_tile(self, title_text: str, value_text: str) -> QFrame:
-        tile = QFrame()
-        tile.setObjectName("tile")
-        layout = QVBoxLayout(tile)
-        layout.setContentsMargins(20, 20, 20, 20)
-        layout.setSpacing(8)
-        title = QLabel(title_text)
-        title.setObjectName("tileTitle")
-        value = QLabel(value_text)
-        value.setObjectName("tileValue")
-        value.setWordWrap(True)
-        layout.addWidget(title)
-        layout.addWidget(value)
-        tile.value_label = value
-        return tile
+    def _build_action_card(self) -> QFrame:
+        action_card = QFrame()
+        action_card.setObjectName("card")
+        action_layout = QVBoxLayout(action_card)
+        action_layout.setContentsMargins(24, 20, 24, 20)
+        action_layout.setSpacing(18)
+
+        mode_row = QHBoxLayout()
+        mode_row.setSpacing(12)
+        self.mode_label = QLabel("Input Mode")
+        self.mode_label.setObjectName("fieldLabel")
+        self.mode_combo = QComboBox()
+        self.mode_combo.addItems(["WAV Audio", "CSV/XLSX Features"])
+        self.mode_combo.currentIndexChanged.connect(self._switch_mode)
+        mode_row.addWidget(self.mode_label)
+        mode_row.addWidget(self.mode_combo, 1)
+
+        self.wav_section = QFrame()
+        wav_layout = QVBoxLayout(self.wav_section)
+        wav_layout.setContentsMargins(0, 0, 0, 0)
+        wav_layout.setSpacing(12)
+
+        self.file_label = QLabel("No file selected")
+        self.file_label.setObjectName("fileLabel")
+        self.file_label.setWordWrap(True)
+        self.file_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        wav_layout.addWidget(self.file_label)
+
+        self.upload_btn = QPushButton("Upload Voice (.wav)")
+        self.upload_btn.setObjectName("primaryButton")
+        self.upload_btn.setMinimumWidth(180)
+        self.upload_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.upload_btn.clicked.connect(self._select_file)
+        wav_layout.addWidget(self.upload_btn)
+
+        self.record_btn = QPushButton("Record Voice")
+        self.record_btn.setObjectName("secondaryButton")
+        self.record_btn.setMinimumWidth(180)
+        self.record_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.record_btn.clicked.connect(self._record_audio)
+        wav_layout.addWidget(self.record_btn)
+
+        duration_row = QHBoxLayout()
+        duration_label = QLabel("Duration")
+        duration_label.setObjectName("fieldLabel")
+        self.duration_spin = QSpinBox()
+        self.duration_spin.setRange(2, 20)
+        self.duration_spin.setValue(6)
+        self.duration_spin.setSuffix(" s")
+        self.duration_spin.setObjectName("durationSpin")
+        self.duration_spin.setFixedWidth(120)
+        duration_row.addWidget(duration_label)
+        duration_row.addWidget(self.duration_spin)
+        duration_row.addStretch(1)
+        wav_layout.addLayout(duration_row)
+
+        self.csv_section = QFrame()
+        csv_layout = QVBoxLayout(self.csv_section)
+        csv_layout.setContentsMargins(0, 0, 0, 0)
+        csv_layout.setSpacing(12)
+
+        self.csv_label = QLabel("No CSV selected")
+        self.csv_label.setObjectName("fileLabel")
+        self.csv_label.setWordWrap(True)
+        self.csv_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        csv_layout.addWidget(self.csv_label)
+
+        self.csv_btn = QPushButton("Upload CSV/XLSX")
+        self.csv_btn.setObjectName("primaryButton")
+        self.csv_btn.setMinimumWidth(180)
+        self.csv_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.csv_btn.clicked.connect(self._select_csv)
+        csv_layout.addWidget(self.csv_btn)
+
+        row_row = QHBoxLayout()
+        self.row_label = QLabel("Row Index")
+        self.row_label.setObjectName("fieldLabel")
+        self.row_spin = QSpinBox()
+        self.row_spin.setRange(0, 100000)
+        self.row_spin.setValue(0)
+        self.row_spin.setFixedWidth(120)
+        row_row.addWidget(self.row_label)
+        row_row.addWidget(self.row_spin)
+        row_row.addStretch(1)
+        csv_layout.addLayout(row_row)
+
+        self.model_status = QLabel("")
+        self.model_status.setObjectName("statusHint")
+
+        self.analyze_btn = QPushButton("Analyze")
+        self.analyze_btn.setObjectName("accentButton")
+        self.analyze_btn.setMinimumHeight(44)
+        self.analyze_btn.setEnabled(False)
+        self.analyze_btn.clicked.connect(self._run_analysis)
+
+        action_layout.addLayout(mode_row)
+        action_layout.addSpacing(10)
+        action_layout.addWidget(self.wav_section)
+        action_layout.addSpacing(10)
+        action_layout.addWidget(self.csv_section)
+        action_layout.addWidget(self.model_status)
+        action_layout.addWidget(self.analyze_btn)
+        return action_card
 
     def _build_record_link_card(self) -> QFrame:
         card = QFrame()
         card.setObjectName("card")
-        layout = QHBoxLayout(card)
-        layout.setContentsMargins(24, 24, 24, 24)
-        
-        text_layout = QVBoxLayout()
+        layout = QVBoxLayout(card)
+        layout.setContentsMargins(24, 20, 24, 20)
+        layout.setSpacing(10)
+
         title = QLabel("Record Voice")
         title.setObjectName("sectionTitle")
-        title.setContentsMargins(0, 0, 0, 0)
-        subtitle = QLabel("Open the recording interface to upload or capture a voice sample.")
+        subtitle = QLabel("Open the recording screen to upload or capture audio.")
         subtitle.setObjectName("subtitle")
-        text_layout.addWidget(title)
-        text_layout.addWidget(subtitle)
-        
+
         open_btn = QPushButton("Go to Record Voice")
-        open_btn.setObjectName("primaryButton")
+        open_btn.setObjectName("accentButton")
+        open_btn.setMinimumHeight(44)
         open_btn.clicked.connect(self._go_to_record_page)
-        
-        layout.addLayout(text_layout)
-        layout.addStretch(1)
+
+        layout.addWidget(title)
+        layout.addWidget(subtitle)
         layout.addWidget(open_btn)
         return card
 
-    def _build_action_card(self) -> QFrame:
-        action_card = QFrame()
-        action_card.setObjectName("actionCard")
-        layout = QVBoxLayout(action_card)
-        layout.setContentsMargins(32, 32, 32, 32)
-        layout.setSpacing(24)
-
-        controls_layout = QHBoxLayout()
-        controls_layout.setSpacing(12)
-        self.mode_combo = QComboBox()
-        self.mode_combo.addItems(["WAV Audio", "CSV / XLSX"])
-        self.mode_combo.currentIndexChanged.connect(self._switch_mode)
-        controls_layout.addWidget(QLabel("Input Type:"))
-        controls_layout.addWidget(self.mode_combo)
-        controls_layout.addStretch(1)
-        layout.addLayout(controls_layout)
-
-        self.audio_widget = QWidget()
-        audio_layout = QVBoxLayout(self.audio_widget)
-        audio_layout.setContentsMargins(0, 0, 0, 0)
-        audio_layout.setSpacing(24)
-        
-        # Apple Voice Memos style recording area
-        record_area = QFrame()
-        record_area.setObjectName("card")
-        record_area_layout = QVBoxLayout(record_area)
-        record_area_layout.setContentsMargins(0, 40, 0, 40)
-        record_area_layout.setAlignment(Qt.AlignCenter)
-        
-        self.record_waveform = QLabel("~ ~ ~ ~ ~ ~ ~ ~ ~ ~")
-        self.record_waveform.setObjectName("title")
-        self.record_waveform.setAlignment(Qt.AlignCenter)
-        self.record_waveform.setStyleSheet("color: #48484A; font-size: 24px;")
-        record_area_layout.addWidget(self.record_waveform)
-        
-        self.record_btn = QPushButton("?")
-        self.record_btn.setFixedSize(64, 64)
-        self.record_btn.setStyleSheet("""
-            QPushButton {
-                background-color: transparent;
-                border: 4px solid #32D74B;
-                border-radius: 32px;
-                color: #FF453A;
-                font-size: 24px;
-            }
-            QPushButton:hover { background-color: rgba(255,69,58,0.1); }
-        """)
-        self.record_btn.clicked.connect(self._record_audio)
-        record_area_layout.addWidget(self.record_btn, 0, Qt.AlignCenter)
-        
-        dur_layout = QHBoxLayout()
-        dur_layout.setAlignment(Qt.AlignCenter)
-        dur_layout.addWidget(QLabel("Duration (s):"))
-        self.duration_spin = QSpinBox()
-        self.duration_spin.setRange(1, 60)
-        self.duration_spin.setValue(5)
-        self.duration_spin.setFixedWidth(80)
-        dur_layout.addWidget(self.duration_spin)
-        record_area_layout.addLayout(dur_layout)
-        
-        audio_layout.addWidget(record_area)
-
-        file_layout = QHBoxLayout()
-        self.file_label = QLabel("No file selected")
-        self.file_label.setObjectName("fileLabel")
-        upload_btn = QPushButton("Upload File")
-        upload_btn.setObjectName("secondaryButton")
-        upload_btn.clicked.connect(self._upload_audio)
-        file_layout.addWidget(self.file_label, 1)
-        file_layout.addWidget(upload_btn)
-        audio_layout.addLayout(file_layout)
-
-        self.csv_widget = QWidget()
-        csv_layout = QVBoxLayout(self.csv_widget)
-        csv_layout.setContentsMargins(0, 0, 0, 0)
-        csv_layout.setSpacing(16)
-        c_file_layout = QHBoxLayout()
-        self.csv_label = QLabel("No CSV/XLSX selected")
-        self.csv_label.setObjectName("fileLabel")
-        c_upload_btn = QPushButton("Upload CSV")
-        c_upload_btn.setObjectName("secondaryButton")
-        c_upload_btn.clicked.connect(self._upload_csv)
-        c_file_layout.addWidget(self.csv_label, 1)
-        c_file_layout.addWidget(c_upload_btn)
-        csv_layout.addLayout(c_file_layout)
-
-        row_layout = QHBoxLayout()
-        row_layout.addWidget(QLabel("Row Index:"))
-        self.row_spin = QSpinBox()
-        self.row_spin.setMinimum(0)
-        self.row_spin.setMaximum(999999)
-        row_layout.addWidget(self.row_spin)
-        row_layout.addStretch(1)
-        csv_layout.addLayout(row_layout)
-
-        layout.addWidget(self.audio_widget)
-        layout.addWidget(self.csv_widget)
-        
-        analyze_area = QHBoxLayout()
-        analyze_area.addStretch(1)
-        self.analyze_btn = QPushButton("Analyze Voice")
-        self.analyze_btn.setObjectName("accentButton")
-        self.analyze_btn.setMinimumWidth(200)
-        self.analyze_btn.clicked.connect(self._run_analysis)
-        analyze_area.addWidget(self.analyze_btn)
-        layout.addLayout(analyze_area)
-
-        return action_card
-
     def _build_quality_card(self) -> QFrame:
-        card = QFrame()
-        card.setObjectName("card")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(32, 32, 32, 32)
-        layout.setSpacing(24)
+        quality_card = QFrame()
+        quality_card.setObjectName("card")
+        quality_layout = QVBoxLayout(quality_card)
+        quality_layout.setContentsMargins(24, 20, 24, 20)
+        quality_layout.setSpacing(14)
 
-        header = QLabel("Audio Quality")
-        header.setObjectName("sectionTitle")
-        header.setContentsMargins(0,0,0,0)
-        hint = QLabel("Acoustic signal clarity and background noise assessment")
-        hint.setObjectName("subtitle")
-        layout.addWidget(header)
-        layout.addWidget(hint)
+        title = QLabel("Quality Assessment")
+        title.setObjectName("qualityTitle")
+        self.quality_hint = QLabel("Upload or record a WAV file to view recording quality.")
+        self.quality_hint.setObjectName("qualityHint")
 
+        self.volume_metric = self._create_quality_metric("Volume Level")
+        self.clarity_metric = self._create_quality_metric("Clarity")
+        self.noise_metric = self._create_quality_metric("Background Noise")
+
+        summary = QFrame()
+        summary.setObjectName("qualitySummary")
+        summary_layout = QVBoxLayout(summary)
+        summary_layout.setContentsMargins(14, 12, 14, 12)
+        summary_layout.setSpacing(4)
         self.quality_status = QLabel("Recording Quality: --")
         self.quality_status.setObjectName("qualityStatus")
         self.quality_detail = QLabel("Awaiting audio input.")
         self.quality_detail.setObjectName("qualityDetail")
-        layout.addWidget(self.quality_status)
-        layout.addWidget(self.quality_detail)
+        summary_layout.addWidget(self.quality_status)
+        summary_layout.addWidget(self.quality_detail)
 
-        self.volume_metric = self._build_quality_metric("Signal Volume", layout)
-        self.clarity_metric = self._build_quality_metric("Acoustic Clarity", layout)
-        self.noise_metric = self._build_quality_metric("Signal-to-Noise", layout)
+        quality_layout.addWidget(title)
+        quality_layout.addWidget(self.quality_hint)
+        quality_layout.addWidget(self.volume_metric["container"])
+        quality_layout.addWidget(self.clarity_metric["container"])
+        quality_layout.addWidget(self.noise_metric["container"])
+        quality_layout.addWidget(summary)
 
-        return card
+        self._update_quality_view(None)
+        return quality_card
 
-    def _build_quality_metric(self, name: str, parent_layout: QVBoxLayout) -> dict:
-        container = QWidget()
+    def _create_quality_metric(self, label_text: str) -> dict[str, QWidget]:
+        container = QFrame()
         layout = QVBoxLayout(container)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(8)
-
-        row = QHBoxLayout()
-        title = QLabel(name)
-        title.setObjectName("tileValue")
-        title.setStyleSheet("font-size: 14px;")
-        rating = QLabel("--")
-        rating.setObjectName("qualityRating")
-        row.addWidget(title)
-        row.addStretch(1)
-        row.addWidget(rating)
-
+        layout.setSpacing(6)
+        title = QLabel(label_text)
+        title.setObjectName("qualityMetricTitle")
         bar = QProgressBar()
         bar.setObjectName("qualityBar")
         bar.setRange(0, 100)
         bar.setValue(0)
         bar.setTextVisible(False)
-
-        layout.addLayout(row)
+        rating = QLabel("--")
+        rating.setObjectName("qualityRating")
+        layout.addWidget(title)
         layout.addWidget(bar)
-        parent_layout.addWidget(container)
-        return {"bar": bar, "rating": rating}
+        layout.addWidget(rating)
+        return {"container": container, "bar": bar, "rating": rating}
 
     def _build_result_card(self) -> QFrame:
-        card = QFrame()
-        card.setObjectName("card")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(32, 32, 32, 32)
-        layout.setSpacing(24)
-
-        header = QLabel("Overall Result")
-        header.setObjectName("sectionTitle")
-        header.setContentsMargins(0,0,0,0)
-        layout.addWidget(header)
-
-        score_row = QHBoxLayout()
-        self.result_label = QLabel("Awaiting Analysis")
+        result_card = QFrame()
+        result_card.setObjectName("card")
+        result_layout = QVBoxLayout(result_card)
+        result_layout.setContentsMargins(24, 20, 24, 20)
+        result_layout.setSpacing(12)
+        self.result_label = QLabel("Awaiting analysis...")
         self.result_label.setObjectName("resultLabel")
-        
-        score_val_layout = QVBoxLayout()
-        score_title = QLabel("Voice Score")
-        score_title.setObjectName("subtitle")
-        score_val_layout.addWidget(self.result_label)
-        score_val_layout.addWidget(score_title)
-        score_row.addLayout(score_val_layout)
-        score_row.addStretch(1)
-        layout.addLayout(score_row)
-
-        self.confidence_bar = QProgressBar()
-        self.confidence_bar.setObjectName("confidenceBar")
-        self.confidence_bar.setRange(0, 100)
-        self.confidence_bar.setValue(0)
-        self.confidence_bar.setTextVisible(False)
-        layout.addWidget(self.confidence_bar)
-
-        self.assessment_label = QLabel("")
+        self.result_label.setAlignment(Qt.AlignLeft | Qt.AlignVCenter)
+        self.assessment_label = QLabel("Health assessment will appear here.")
         self.assessment_label.setObjectName("assessmentLabel")
         self.assessment_label.setWordWrap(True)
-        self.guidance_label = QLabel("")
+        self.guidance_label = QLabel("This tool is not a medical diagnosis.")
         self.guidance_label.setObjectName("guidanceLabel")
         self.guidance_label.setWordWrap(True)
-        layout.addWidget(self.assessment_label)
-        layout.addWidget(self.guidance_label)
-
-        disclaimer = QLabel("This is an acoustic screening research tool. Not a medical diagnosis.")
-        disclaimer.setObjectName("disclaimer")
-        layout.addWidget(disclaimer)
-
-        return card
+        self.confidence_bar = QProgressBar()
+        self.confidence_bar.setRange(0, 100)
+        self.confidence_bar.setValue(0)
+        self.confidence_bar.setTextVisible(True)
+        self.confidence_bar.setFormat("Confidence: %p%")
+        self.confidence_bar.setObjectName("confidenceBar")
+        result_layout.addWidget(self.result_label)
+        result_layout.addWidget(self.assessment_label)
+        result_layout.addWidget(self.guidance_label)
+        result_layout.addWidget(self.confidence_bar)
+        return result_card
 
     def _build_history_card(self) -> QFrame:
-        card = QFrame()
-        card.setObjectName("card")
-        layout = QVBoxLayout(card)
-        layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(0)
-        
+        history_card = QFrame()
+        history_card.setObjectName("card")
+        history_layout = QVBoxLayout(history_card)
+        history_layout.setContentsMargins(24, 20, 24, 20)
+        history_layout.setSpacing(12)
+        history_title = QLabel("History")
+        history_title.setObjectName("sectionTitle")
         self.history_list = QListWidget()
         self.history_list.setObjectName("historyList")
-        layout.addWidget(self.history_list)
-        return card
+        history_layout.addWidget(history_title)
+        history_layout.addWidget(self.history_list)
+        return history_card
+
+    def _nav_button(self, text: str, icon: QStyle.StandardPixmap, idx: int) -> QPushButton:
+        button = QPushButton(text)
+        button.setObjectName("navButton")
+        button.setCheckable(True)
+        button.setIcon(self.style().standardIcon(icon))
+        self.nav_group.addButton(button, idx)
+        return button
+
+    def _create_tile(self, title: str, value: str) -> QFrame:
+        tile = QFrame()
+        tile.setObjectName("tile")
+        layout = QVBoxLayout(tile)
+        layout.setContentsMargins(16, 12, 16, 12)
+        layout.setSpacing(4)
+        title_label = QLabel(title)
+        title_label.setObjectName("tileTitle")
+        value_label = QLabel(value)
+        value_label.setObjectName("tileValue")
+        layout.addWidget(title_label)
+        layout.addWidget(value_label)
+        tile.value_label = value_label
+        return tile
+
+    def _apply_styles(self) -> None:
+        self.setStyleSheet(get_stylesheet())
+
+    def _load_model(self) -> None:
+        audio_model = resource_path("models/model_audio.joblib")
+        audio_scaler = resource_path("models/scaler_audio.joblib")
+        csv_model = resource_path("models/model_csv.joblib")
+        csv_scaler = resource_path("models/scaler_csv.joblib")
+        default_model = resource_path("models/model.joblib")
+        default_scaler = resource_path("models/scaler.joblib")
+
+        self.predictor_audio = self._try_load_predictor(audio_model, audio_scaler)
+        self.predictor_csv = self._try_load_predictor(csv_model, csv_scaler)
+
+        if self.predictor_audio is None and default_model.exists() and default_scaler.exists():
+            self.predictor_audio = self._try_load_predictor(default_model, default_scaler)
+
+        if self.predictor_csv is None and default_model.exists() and default_scaler.exists():
+            self.predictor_csv = self._try_load_predictor(default_model, default_scaler)
+
+        self._update_model_status()
+
+        if self.predictor_audio is None and self.predictor_csv is None:
+            QMessageBox.critical(
+                self,
+                "Model Load Error",
+                "Could not load model artifacts.\n\n"
+                "Add model_audio.joblib + scaler_audio.joblib for WAV mode, and\n"
+                "model_csv.joblib + scaler_csv.joblib for CSV mode (or model.joblib + scaler.joblib).",
+            )
+
+    def _try_load_predictor(self, model_path: Path, scaler_path: Path) -> ParkinsonPredictor | None:
+        try:
+            if model_path.exists() and scaler_path.exists():
+                return ParkinsonPredictor(model_path, scaler_path)
+        except Exception:
+            return None
+        return None
+
+    def _update_model_status(self) -> None:
+        audio_ok = self.predictor_audio is not None
+        csv_ok = self.predictor_csv is not None
+        status = "Audio: Ready" if audio_ok else "Audio: Missing"
+        status += " | CSV: Ready" if csv_ok else " | CSV: Missing"
+        self.status_tile.value_label.setText(status)
+        hint = "Audio model missing. Train WAV model to enable analysis." if not audio_ok else ""
+        if self.mode_combo.currentIndex() == 1 and not csv_ok:
+            hint = "CSV model missing. Train CSV model to enable analysis."
+        self.model_status.setText(hint)
+
+    def _select_file(self) -> None:
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select WAV file",
+            default_dialog_dir(),
+            "WAV Files (*.wav);;All Files (*.*)"
+        )
+        if not file_path:
+            return
+
+        self.audio_path = file_path
+        self.file_label.setText(Path(file_path).name)
+        self._update_quality_view(file_path)
+        self._refresh_analyze_state()
+
+    def _select_csv(self) -> None:
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select CSV or XLSX file",
+            default_dialog_dir(),
+            "CSV/XLSX Files (*.csv *.xlsx);;All Files (*.*)"
+        )
+        if not file_path:
+            return
+
+        self.csv_path = file_path
+        self.csv_label.setText(Path(file_path).name)
+        self._update_quality_view(None)
+        self._refresh_analyze_state()
 
     def _switch_mode(self) -> None:
         is_audio = self.mode_combo.currentIndex() == 0
