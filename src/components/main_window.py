@@ -5,6 +5,35 @@ from pathlib import Path
 import numpy as np
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QFont
+
+from PySide6.QtCore import QThread, Signal
+
+class RecordThread(QThread):
+    finished_recording = Signal(str)
+    error_occurred = Signal(str)
+
+    def __init__(self, duration, sample_rate, output_path):
+        super().__init__()
+        self.duration = duration
+        self.sample_rate = sample_rate
+        self.output_path = output_path
+
+    def run(self):
+        try:
+            import sounddevice as sd
+            import soundfile as sf
+            recording = sd.rec(
+                int(self.duration * self.sample_rate),
+                samplerate=self.sample_rate,
+                channels=1,
+                dtype="float32",
+            )
+            sd.wait()
+            sf.write(str(self.output_path), recording, self.sample_rate)
+            self.finished_recording.emit(str(self.output_path))
+        except Exception as exc:
+            self.error_occurred.emit(str(exc))
+
 from PySide6.QtWidgets import (
     QApplication,
     QButtonGroup,
@@ -590,11 +619,13 @@ class MainWindow(QMainWindow):
         try:
             import sounddevice as sd
             import soundfile as sf
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             QMessageBox.critical(
                 self,
                 "Recording Error",
-                f"Audio recording dependencies are missing.\n\n{exc}",
+                f"Audio recording dependencies are missing.
+
+{exc}",
             )
             return
 
@@ -603,27 +634,38 @@ class MainWindow(QMainWindow):
         record_dir = Path(__file__).resolve().parents[1] / "recordings"
         record_dir.mkdir(parents=True, exist_ok=True)
         output_path = record_dir / "recorded_voice.wav"
+        
+        # UI Feedback
+        for btn in self.findChildren(QPushButton):
+            if btn.text() == "Record Audio":
+                btn.setEnabled(False)
+                btn.setText("Recording...")
+                self._current_rec_btn = btn
+                break
 
-        try:
-            recording = sd.rec(
-                int(duration * sample_rate),
-                samplerate=sample_rate,
-                channels=1,
-                dtype="float32",
-            )
-            sd.wait()
-            sf.write(str(output_path), recording, sample_rate)
+        self.record_thread = RecordThread(duration, sample_rate, output_path)
+        self.record_thread.finished_recording.connect(self._on_record_finished)
+        self.record_thread.error_occurred.connect(self._on_record_error)
+        self.record_thread.start()
 
-            self.audio_path = str(output_path)
-            self.file_label.setText(output_path.name)
-            self._update_quality_view(str(output_path))
-            self._refresh_analyze_state()
-        except Exception as exc:  # noqa: BLE001
-            QMessageBox.critical(
-                self,
-                "Recording Error",
-                f"Failed to record audio.\n\n{exc}",
-            )
+    def _on_record_finished(self, output_path_str: str) -> None:
+        if hasattr(self, '_current_rec_btn') and self._current_rec_btn:
+            self._current_rec_btn.setEnabled(True)
+            self._current_rec_btn.setText("Record Audio")
+
+        output_path = Path(output_path_str)
+        self.audio_path = str(output_path)
+        self.file_label.setText(output_path.name)
+        self._update_quality_view(str(output_path))
+        self._refresh_analyze_state()
+
+    def _on_record_error(self, exc: str) -> None:
+        if hasattr(self, '_current_rec_btn') and self._current_rec_btn:
+            self._current_rec_btn.setEnabled(True)
+            self._current_rec_btn.setText("Record Audio")
+        QMessageBox.critical(self, "Recording Error", f"Failed to record audio.
+
+{exc}")
 
     def _run_analysis(self) -> None:
         is_audio = self.mode_combo.currentIndex() == 0
