@@ -375,7 +375,7 @@ class MainWindow(QMainWindow):
         self.file_label.setObjectName("fileLabel")
         upload_btn = QPushButton("Upload File")
         upload_btn.setObjectName("secondaryButton")
-        upload_btn.clicked.connect(self._upload_audio)
+        upload_btn.clicked.connect(self._select_file)
         file_layout.addWidget(self.file_label, 1)
         file_layout.addWidget(upload_btn)
         audio_layout.addLayout(file_layout)
@@ -389,7 +389,7 @@ class MainWindow(QMainWindow):
         self.csv_label.setObjectName("fileLabel")
         c_upload_btn = QPushButton("Upload CSV")
         c_upload_btn.setObjectName("secondaryButton")
-        c_upload_btn.clicked.connect(self._upload_csv)
+        c_upload_btn.clicked.connect(self._select_csv)
         c_file_layout.addWidget(self.csv_label, 1)
         c_file_layout.addWidget(c_upload_btn)
         csv_layout.addLayout(c_file_layout)
@@ -787,5 +787,6 @@ def create_app() -> QApplication:
     app = QApplication([])
     app.setFont(QFont("Segoe UI", 10))
     return app
+
 
 
